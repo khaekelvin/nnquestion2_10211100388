@@ -1,0 +1,3 @@
+loan_amount,rate_of_interest,interest_rate_spread,upfront_charges,term_in_months,property_value,income,credit_score,status
+100000,5.5,2.1,1000,360,250000,80000,720,0
+200000,6.0,2.5,2000,240,300000,90000,680,1

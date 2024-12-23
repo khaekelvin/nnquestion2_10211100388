@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block header %}
+Prediction Results
+{% endblock %}
+
+{% block content %}
+<div class="results-container">
+    <div class="prediction-summary">
+        <h2>Loan Default Risk Assessment</h2>
+        
+        <div class="risk-gauge {% if prediction.default_probability > 0.5 %}high-risk{% else %}low-risk{% endif %}">
+            <div class="risk-value">
+                <span class="percentage">{{ "%.1f"|format(prediction.default_probability * 100) }}%</span>
+                <span class="risk-label">Default Risk</span>
+            </div>
+        </div>
+        
+        <div class="risk-assessment">
+            {% if prediction.default_probability > 0.75 %}
+                <div class="alert alert-danger">
+                    <h3>High Risk</h3>
+                    <p>This loan application shows significant risk factors. Careful consideration is recommended.</p>
+                </div>
+            {% elif prediction.default_probability > 0.5 %}
+                <div class="alert alert-warning">
+                    <h3>Moderate-High Risk</h3>
+                    <p>This loan application shows elevated risk factors. Additional guarantees may be needed.</p>
+                </div>
+            {% elif prediction.default_probability > 0.25 %}
+                <div class="alert alert-info">
+                    <h3>Moderate-Low Risk</h3>
+                    <p>This loan application shows some risk factors but appears generally stable.</p>
+                </div>
+            {% else %}
+                <div class="alert alert-success">
+                    <h3>Low Risk</h3>
+                    <p>This loan application shows favorable risk factors.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="input-summary">
+        <h3>Application Details</h3>
+        <table class="details-table">
+            <tr>
+                <th>Loan Amount:</th>
+                <td>${{ "%.2f"|format(input_data.loan_amount) }}</td>
+            </tr>
+            <tr>
+                <th>Interest Rate:</th>
+                <td>{{ "%.2f"|format(input_data.rate_of_interest) }}%</td>
+            </tr>
+            <tr>
+                <th>Term:</th>
+                <td>{{ input_data.term_in_months }} months</td>
+            </tr>
+            <tr>
+                <th>Property Value:</th>
+                <td>${{ "%.2f"|format(input_data.property_value) }}</td>
+            </tr>
+            <tr>
+                <th>Income:</th>
+                <td>${{ "%.2f"|format(input_data.income) }}</td>
+            </tr>
+            <tr>
+                <th>Credit Score:</th>
+                <td>{{ input_data.credit_score }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="feature-importance">
+        <h3>Key Risk Factors</h3>
+        <img src="{{ url_for('static', filename='images/feature_importance.png') }}" 
+             alt="Feature Importance Plot"
+             class="feature-plot">
+    </div>
+
+    <div class="recommendations">
+        <h3>Recommendations</h3>
+        <ul>
+            {% if prediction.default_probability > 0.5 %}
+                <li>Consider requesting additional collateral</li>
+                <li>Verify income sources thoroughly</li>
+                <li>Review credit history in detail</li>
+                <li>May need to adjust loan terms</li>
+            {% else %}
+                <li>Standard verification procedures recommended</li>
+                <li>Regular monitoring of repayment schedule</li>
+                <li>Consider offering preferential terms</li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <div class="actions">
+        <a href="{{ url_for('home') }}" class="btn btn-primary">New Prediction</a>
+        <button onclick="window.print()" class="btn btn-secondary">Print Report</button>
+    </div>
+</div>
+{% endblock %}
