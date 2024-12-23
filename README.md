@@ -6,9 +6,6 @@ A machine learning web application that predicts loan default probability using 
 ## Installation
 
 ```bash
-# Clone the repository
-git clone [repository-url]
-
 # Create and activate virtual environment
 python -m venv venv
 source venv/bin/activate 
