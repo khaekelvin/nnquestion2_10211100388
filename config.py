@@ -1,8 +1,10 @@
 import os
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 class ModelConfig:
     # Data settings
-    DATA_PATH = 'data/raw/Loandataset.csv'
+    DATA_PATH = os.path.join(BASE_DIR, 'data', 'raw', 'Loandataset.csv')
     
     # Model parameters
     EPOCHS = 50
@@ -11,8 +13,8 @@ class ModelConfig:
     RANDOM_STATE = 42
     
     # Model paths
-    MODEL_PATH = 'models/saved_models/model.h5'
-    SCALER_PATH = 'models/saved_models/scaler.pkl'
+    MODEL_PATH = os.path.join(BASE_DIR, 'models', 'saved_models', 'model.h5')
+    SCALER_PATH = os.path.join(BASE_DIR, 'models', 'saved_models', 'scaler.pkl')
     
     # These will be updated based on actual columns in the dataset
     FEATURE_NAMES = [

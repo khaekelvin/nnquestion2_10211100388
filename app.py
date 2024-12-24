@@ -19,15 +19,24 @@ app.config.from_object(FlaskConfig)
 # Ensure required directories exist
 os.makedirs('static/images', exist_ok=True)
 
-try:
-    # Load the model and scaler
-    logger.info("Loading model and scaler...")
-    model = LoanPredictor.load_model(ModelConfig.MODEL_PATH)
-    scaler = joblib.load(ModelConfig.SCALER_PATH)
-    logger.info("Model and scaler loaded successfully")
-except Exception as e:
-    logger.error(f"Error loading model or scaler: {str(e)}")
-    raise
+def initialize_model():
+    """Initialize model and train if needed"""
+    try:
+        logger.info("Loading model and scaler...")
+        model = LoanPredictor.load_model(ModelConfig.MODEL_PATH)
+        scaler = joblib.load(ModelConfig.SCALER_PATH)
+        logger.info("Model and scaler loaded successfully")
+        return model, scaler
+    except Exception as e:
+        logger.warning(f"Model not found, training new model: {str(e)}")
+        from train import main as train_model
+        train_model()
+        model = LoanPredictor.load_model(ModelConfig.MODEL_PATH)
+        scaler = joblib.load(ModelConfig.SCALER_PATH)
+        return model, scaler
+
+# Initialize model and scaler
+model, scaler = initialize_model()
 
 @app.route('/')
 def home():
