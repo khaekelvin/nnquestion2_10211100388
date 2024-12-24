@@ -36,10 +36,6 @@ env/
 # Model files and data
 *.h5
 *.pkl
-data/raw/*
-data/processed/*
-!data/raw/.gitkeep
-!data/processed/.gitkeep
 
 # Logs and databases
 *.log
@@ -49,12 +45,6 @@ data/processed/*
 # Environment variables
 .env
 .env.local
-
-# Generated files
-static/images/*
-!static/images/.gitkeep
-models/saved_models/*
-!models/saved_models/.gitkeep
 
 # Jupyter Notebooks
 .ipynb_checkpoints

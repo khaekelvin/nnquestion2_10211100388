@@ -81,19 +81,32 @@ def internal_server_error(e):
 
 def initialize_app():
     """Initialize application and required directories"""
-    # Create required directories
-    os.makedirs(os.path.dirname(ModelConfig.DATA_PATH), exist_ok=True)
-    os.makedirs(os.path.dirname(ModelConfig.MODEL_PATH), exist_ok=True)
-    os.makedirs('static/images', exist_ok=True)
-    
-    # Copy dataset if not exists
-    if not os.path.exists(ModelConfig.DATA_PATH):
-        source_dataset = os.path.join(os.path.dirname(__file__), 'Loandataset.csv')
-        if os.path.exists(source_dataset):
-            import shutil
-            shutil.copy(source_dataset, ModelConfig.DATA_PATH)
-        else:
-            raise FileNotFoundError("Dataset not found!")
+    try:
+        # Create directories
+        os.makedirs(ModelConfig.DATA_DIR, exist_ok=True)
+        os.makedirs(ModelConfig.MODELS_DIR, exist_ok=True)
+        os.makedirs('static/images', exist_ok=True)
+        
+        # Check for dataset
+        if not os.path.exists(ModelConfig.DATA_PATH):
+            logger.info("Dataset not found, using sample data...")
+            # Copy sample data from data directory
+            sample_data_path = os.path.join(ModelConfig.BASE_DIR, 'data', 'sample', 'Loandataset.csv')
+            if os.path.exists(sample_data_path):
+                import shutil
+                shutil.copy(sample_data_path, ModelConfig.DATA_PATH)
+            else:
+                raise FileNotFoundError("Sample dataset not found!")
+        
+        # Train model if needed
+        if not os.path.exists(ModelConfig.MODEL_PATH):
+            logger.info("Training new model...")
+            from train import main as train_model
+            train_model()
+            
+    except Exception as e:
+        logger.error(f"Initialization error: {str(e)}")
+        raise
 
 # Initialize app
 initialize_app()

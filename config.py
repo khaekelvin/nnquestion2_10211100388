@@ -1,19 +1,12 @@
 import os
 
 class ModelConfig:
-    # Detect environment
-    IS_PRODUCTION = os.environ.get('RENDER', False)
-    
-    # Set base directory based on environment
-    if IS_PRODUCTION:
-        BASE_DIR = "/opt/render/project/src"
-    else:
-        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    
-    # Data paths
+    # Base paths
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     DATA_DIR = os.path.join(BASE_DIR, "data", "raw")
     MODELS_DIR = os.path.join(BASE_DIR, "models", "saved_models")
     
+    # File paths
     DATA_PATH = os.path.join(DATA_DIR, "Loandataset.csv")
     MODEL_PATH = os.path.join(MODELS_DIR, "model.h5")
     SCALER_PATH = os.path.join(MODELS_DIR, "scaler.pkl")
