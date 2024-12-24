@@ -1,20 +1,28 @@
 import os
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
 class ModelConfig:
-    # Data settings
-    DATA_PATH = os.path.join(BASE_DIR, 'data', 'raw', 'Loandataset.csv')
+    # Detect environment
+    IS_PRODUCTION = os.environ.get('RENDER', False)
+    
+    # Set base directory based on environment
+    if IS_PRODUCTION:
+        BASE_DIR = "/opt/render/project/src"
+    else:
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    
+    # Data paths
+    DATA_DIR = os.path.join(BASE_DIR, "data", "raw")
+    MODELS_DIR = os.path.join(BASE_DIR, "models", "saved_models")
+    
+    DATA_PATH = os.path.join(DATA_DIR, "Loandataset.csv")
+    MODEL_PATH = os.path.join(MODELS_DIR, "model.h5")
+    SCALER_PATH = os.path.join(MODELS_DIR, "scaler.pkl")
     
     # Model parameters
     EPOCHS = 50
     BATCH_SIZE = 32
     VALIDATION_SPLIT = 0.2
     RANDOM_STATE = 42
-    
-    # Model paths
-    MODEL_PATH = os.path.join(BASE_DIR, 'models', 'saved_models', 'model.h5')
-    SCALER_PATH = os.path.join(BASE_DIR, 'models', 'saved_models', 'scaler.pkl')
     
     # These will be updated based on actual columns in the dataset
     FEATURE_NAMES = [

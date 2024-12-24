@@ -1,8 +1,8 @@
 #!/bin/bash
-set -e  # Exit on error
+set -e
 
-echo "Installing dependencies..."
-pip install -r requirements.txt
+echo "Setting up environment..."
+export RENDER=true
 
 echo "Creating directories..."
 mkdir -p data/raw models/saved_models static/images
@@ -10,7 +10,8 @@ mkdir -p data/raw models/saved_models static/images
 echo "Copying dataset..."
 cp Loandataset.csv data/raw/
 
+echo "Installing dependencies..."
+pip install -r requirements.txt
+
 echo "Training model..."
 python train.py
-
-echo "Build completed!"

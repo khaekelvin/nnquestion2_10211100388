@@ -1,42 +1,39 @@
+import os
+import logging
 from flask import Flask, render_template, request, jsonify, url_for
 import numpy as np
 import pandas as pd
-from models import LoanPredictor
+from models.loan_predictor import LoanPredictor
 from utils.data_preprocessing import preprocess_input
 from utils.model_interpretation import generate_feature_importance_plot
 import joblib
-import os
 from config import FlaskConfig, ModelConfig
-import logging
-
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config.from_object(FlaskConfig)
+logging.basicConfig(level=logging.INFO)
+logger = app.logger
 
 # Ensure required directories exist
 os.makedirs('static/images', exist_ok=True)
 
-def initialize_model():
-    """Initialize model and train if needed"""
-    try:
-        logger.info("Loading model and scaler...")
-        model = LoanPredictor.load_model(ModelConfig.MODEL_PATH)
-        scaler = joblib.load(ModelConfig.SCALER_PATH)
-        logger.info("Model and scaler loaded successfully")
-        return model, scaler
-    except Exception as e:
-        logger.warning(f"Model not found, training new model: {str(e)}")
+def ensure_model_exists():
+    """Ensure model and required files exist"""
+    if not os.path.exists(ModelConfig.DATA_PATH):
+        raise FileNotFoundError(f"Dataset not found at {ModelConfig.DATA_PATH}")
+    
+    if not os.path.exists(ModelConfig.MODEL_PATH):
+        logger.info("Training new model...")
         from train import main as train_model
         train_model()
-        model = LoanPredictor.load_model(ModelConfig.MODEL_PATH)
-        scaler = joblib.load(ModelConfig.SCALER_PATH)
-        return model, scaler
 
-# Initialize model and scaler
-model, scaler = initialize_model()
+try:
+    ensure_model_exists()
+    model = LoanPredictor.load_model(ModelConfig.MODEL_PATH)
+    scaler = joblib.load(ModelConfig.SCALER_PATH)
+except Exception as e:
+    logger.error(f"Error initializing app: {str(e)}")
+    raise
 
 @app.route('/')
 def home():
@@ -81,6 +78,25 @@ def page_not_found(e):
 def internal_server_error(e):
     """Handle 500 errors"""
     return render_template('error.html', error="Internal server error"), 500
+
+def initialize_app():
+    """Initialize application and required directories"""
+    # Create required directories
+    os.makedirs(os.path.dirname(ModelConfig.DATA_PATH), exist_ok=True)
+    os.makedirs(os.path.dirname(ModelConfig.MODEL_PATH), exist_ok=True)
+    os.makedirs('static/images', exist_ok=True)
+    
+    # Copy dataset if not exists
+    if not os.path.exists(ModelConfig.DATA_PATH):
+        source_dataset = os.path.join(os.path.dirname(__file__), 'Loandataset.csv')
+        if os.path.exists(source_dataset):
+            import shutil
+            shutil.copy(source_dataset, ModelConfig.DATA_PATH)
+        else:
+            raise FileNotFoundError("Dataset not found!")
+
+# Initialize app
+initialize_app()
 
 if __name__ == '__main__':
     # Check if model and scaler exist

@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: loan-default-predictor
+    name: loan-predictor
     env: python
     buildCommand: chmod +x build.sh && ./build.sh
     startCommand: gunicorn app:app
