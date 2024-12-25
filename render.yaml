@@ -3,13 +3,7 @@ services:
     name: loan-predictor
     env: python
     buildCommand: chmod +x build.sh && ./build.sh
-    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --timeout 120 --workers 2 --log-level debug
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.0
       - key: PORT
         value: 8000
-      - key: PYTHONUNBUFFERED
-        value: "1"
-      - key: TF_CPP_MIN_LOG_LEVEL
-        value: "2"
