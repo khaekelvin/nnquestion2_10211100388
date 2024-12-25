@@ -26,9 +26,9 @@ def initialize_app():
         scaler_path = 'models/saved_models/scaler.pkl'
         
         if not os.path.exists(model_path):
-            st.error("Model file not found. Training new model...")
-            from train import main as train_model
-            train_model()
+            print("Training new model...")
+            import train
+            train.main()
         
         # Load model and scaler
         model = load_model(model_path)
