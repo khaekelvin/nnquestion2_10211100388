@@ -8,4 +8,5 @@ mkdir -p data/raw
 mkdir -p models/saved_models
 mkdir -p static/images
 
+echo "Training model..."
 python train.py

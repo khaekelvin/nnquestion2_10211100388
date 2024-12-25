@@ -75,6 +75,7 @@ def main():
     
     # Save model and scaler
     print("Saving model and scaler...")
+    os.makedirs('models/saved_models', exist_ok=True)
     model.save_model(ModelConfig.MODEL_PATH)
     joblib.dump(scaler, ModelConfig.SCALER_PATH)
     

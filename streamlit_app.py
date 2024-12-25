@@ -1,29 +1,54 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from utils.data_preprocessing import preprocess_input
-import tensorflow as tf
 import os
+import tensorflow as tf
+from tensorflow.keras.models import load_model
+from sklearn.preprocessing import StandardScaler
+import joblib
 
+# Configure page
 st.set_page_config(
     page_title="Loan Default Predictor",
     page_icon="🏦",
     layout="wide"
 )
 
-@st.cache_resource
-def load_model():
-    return tf.keras.models.load_model('models/saved_models/model.h5')
+def initialize_app():
+    """Initialize application and load model"""
+    try:
+        # Create directories if they don't exist
+        os.makedirs('models/saved_models', exist_ok=True)
+        os.makedirs('data/raw', exist_ok=True)
+        
+        # Check if model exists
+        model_path = 'models/saved_models/model.h5'
+        scaler_path = 'models/saved_models/scaler.pkl'
+        
+        if not os.path.exists(model_path):
+            st.error("Model file not found. Training new model...")
+            from train import main as train_model
+            train_model()
+        
+        # Load model and scaler
+        model = load_model(model_path)
+        scaler = joblib.load(scaler_path)
+        
+        return model, scaler
+        
+    except Exception as e:
+        st.error(f"Error initializing app: {str(e)}")
+        return None, None
 
 def main():
     st.title("🏦 Loan Default Prediction System")
     
-    try:
-        model = load_model()
-    except Exception as e:
-        st.error("Error loading model. Please ensure model is trained.")
-        return
-
+    # Initialize app and load model
+    model, scaler = initialize_app()
+    
+    if model is None:
+        st.stop()
+    
     with st.form("loan_form"):
         col1, col2 = st.columns(2)
         
