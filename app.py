@@ -111,12 +111,6 @@ def initialize_app():
 # Initialize app
 initialize_app()
 
-if __name__ == '__main__':
-    # Check if model and scaler exist
-    if not os.path.exists(ModelConfig.MODEL_PATH) or not os.path.exists(ModelConfig.SCALER_PATH):
-        logger.error("Model or scaler not found. Please run train.py first.")
-        print("Error: Model or scaler not found. Please run train.py first.")
-        exit(1)
-        
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=FlaskConfig.DEBUG)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))
+    app.run(host='0.0.0.0', port=port)
