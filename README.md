@@ -3,7 +3,28 @@
 ## Description
 A machine learning web application that predicts loan default probability using neural networks. The system analyzes various customer parameters to assist financial institutions in risk assessment.
 
-## Installation
+Link :  https://nnquestion2-10211100388.onrender.com
+
+## Loan Model Prediction
+
+### Step 1
+<img width="1680" alt="Screenshot 2024-12-25 at 9 54 34 PM" src="https://github.com/user-attachments/assets/492e0af4-45d3-4559-8418-27c170249d78" />
+
+
+
+### Step 2
+<img width="1680" alt="Screenshot 2024-12-25 at 9 54 49 PM" src="https://github.com/user-attachments/assets/a22a7706-5f2f-4f92-98ee-418e369bce44" />
+
+
+
+
+
+### Step 3
+
+
+<img width="1679" alt="Screenshot 2024-12-25 at 9 55 01 PM" src="https://github.com/user-attachments/assets/7478da2a-dfdc-401b-b552-94e34935c098" />
+
+
 
 ```bash
 # Create and activate virtual environment
